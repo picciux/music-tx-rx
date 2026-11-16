@@ -1,0 +1,14 @@
+# Nome fisso ALSA della scheda USB (es. hw:CODEC, hw:USB, ecc.)
+# Usa:
+#   $ aplay -l
+# per elencare le device (usa il nome invece del numero).
+AUDIO_DEVICE="hw:CODEC"
+
+# Frequenza di campionamento (48000 o 44100)
+SAMPLE_RATE=48000
+
+# Dimensione del buffer in campioni (64, 128, 256 - più basso = meno latenza)
+BUFFER_SIZE=128
+
+# Numero di periodi (2 o 3 - su USB spesso 2 o 3 garantisce stabilità)
+PERIODS=2

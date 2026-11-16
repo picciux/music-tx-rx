@@ -1,0 +1,16 @@
+# Nome fisso ALSA dell'uscita (es. hw:Headphones per il jack integrato)
+# Usa:
+#   $ arecord -l
+# per elencare (usa il nome invece del numero).
+# N.B.: potrebbe essere necessario dtparam=audio=on per abilitare uscita audio e
+# audio_pwm_mode=2 in config.txt per eliminare il fruscio dall'uscita mini-jack.
+AUDIO_DEVICE="hw:Headphones"
+
+# Deve corrispondere al Sample Rate del trasmettitore
+SAMPLE_RATE=48000
+
+# Buffer per l'uscita locale (sul jack integrato 256 è consigliato per evitare click)
+BUFFER_SIZE=256
+
+# Numero di periodi
+PERIODS=2

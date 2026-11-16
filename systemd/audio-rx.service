@@ -1,0 +1,21 @@
+[Unit]
+Description=JACK Audio Receiver (NetJack to Pi Headphone Jack)
+After=network-online.target sound.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=desvelo
+Group=audio
+LimitRTPRIO=95
+LimitMEMLOCK=infinity
+
+ExecStartPre=/bin/sh -c 'echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+
+ExecStart=/usr/local/bin/start-audio-rx.sh
+
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
