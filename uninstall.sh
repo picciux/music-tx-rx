@@ -25,13 +25,13 @@ sudo systemctl unmask alsa-store.service
 
 echo "- Rimuovo i file..."
 
-sudo rm $DESTDIR$CONFIG/music-trx
 sudo rm $DESTDIR/etc/default/music-trx
 sudo rm $DESTDIR/etc/systemd/system/music-trx.service
 sudo rm $DESTDIR/usr/local/bin/music-trx-*
 sudo rm $DESTDIR/usr/local/bin/start-music-trx.sh
-sudo rm $DESTDIR/mnt/config/asound.state
-sudo rm $DESTDIR/mnt/config/music-trx
+sudo rm $DESTDIR$CONFIG/asound.state
+sudo rm $DESTDIR$CONFIG/music-trx
+
 
 # ricarica i servizi
 sudo systemctl daemon-reload
