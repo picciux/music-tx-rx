@@ -1,25 +1,25 @@
 #! /bin/bash
 
-set -e
+CF=/etc/default/music-trx
 
-CF="$( ls /etc/default/audio-?x )"
-
-if [ ! -f $CF ]; then
+if [ ! -f "$CF" ]; then
     echo "ERROR: no audio config file found."
     exit 1
 fi
 
-source $CF
+set -e
+
+source "$CF"
 #T="${CF: -2}"
 
 case $1 in
-  rw)
+  rw|enable)
     echo -n "Enable $CONFIG for write: "
     sudo mount -o remount,rw $CONFIG
     echo 'done.'
     ;;
 
-  ro)
+  ro|disable)
     echo -n "Protect $CONFIG read-only: "
     sync
     sudo mount -o remount,ro $CONFIG
@@ -27,7 +27,9 @@ case $1 in
     ;;
 
   *)
-    echo "USAGE: $0 rw|ro"
+    echo
+    echo "USAGE: $0 enable|disable"
+    echo
     exit 1
     ;;
 esac

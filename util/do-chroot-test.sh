@@ -24,7 +24,7 @@ fi
 RUN_USER_DIR="/run/user/$( id -u )"
 
 # Mount special filesystems
-echo -n "Mounting filesystems..."
+echo "- Mount filesystems..."
 sudo mount -t proc proc $1/proc
 sudo mount -t sysfs sys $1/sys
 sudo mount --bind /dev $1/dev
@@ -34,13 +34,13 @@ sudo mount --bind $RUN_USER_DIR $1/$RUN_USER_DIR
 
 [ "$MOUNT_HOME" = "yes" ] && mount --bind /home/$ME $1/home/$ME
 
-echo " done."
-
+echo "- Prepare system"
 sudo cp /etc/resolv.conf $1/etc/
 
+echo "- Enter test environment (type 'exit' to leave)."
 debian_chroot="$1" sudo -E chroot $1 su --login -w debian_chroot,DISPLAY,Xauthority,XAUTHORITY,DBUS_SESSION_BUS_ADDRESS $CMD $ME
 
-echo -n "Unmounting filesystems..."
+echo "Unmount filesystems"
 
 [ "$MOUNT_HOME" = "yes" ] && umount $1/home/$ME
 sudo umount --recursive $1/$RUN_USER_DIR
@@ -49,9 +49,14 @@ sudo umount $1/dev
 sudo umount $1/sys
 sudo umount $1/proc
 
+cat << EOF
 
-echo " done."
-echo
+Exited from test environment.
 
+Don't forget to remove the test and clear the environment, typing:
 
+    $ $MYDIR/remove-chroot-test.sh $1
 
+if you don't need it anymore.
+
+EOF

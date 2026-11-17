@@ -1,3 +1,7 @@
+
+# Ruolo: tx o rx
+ROLE=tx
+
 # Nome fisso ALSA della scheda USB (es. hw:CODEC, hw:USB, ecc.)
 # Usa:
 #   $ aplay -l
@@ -12,3 +16,4 @@ BUFFER_SIZE=128
 
 # Numero di periodi (2 o 3 - su USB spesso 2 o 3 garantisce stabilità)
 PERIODS=2
+

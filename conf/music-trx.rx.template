@@ -1,3 +1,7 @@
+
+# Ruolo: tx o rx
+ROLE=rx
+
 # Nome fisso ALSA dell'uscita (es. hw:Headphones per il jack integrato)
 # Usa:
 #   $ arecord -l
@@ -14,3 +18,4 @@ BUFFER_SIZE=256
 
 # Numero di periodi
 PERIODS=2
+
