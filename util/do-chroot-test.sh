@@ -29,6 +29,7 @@ sudo mount -t proc proc $1/proc
 sudo mount -t sysfs sys $1/sys
 sudo mount --bind /dev $1/dev
 sudo mount -t devpts devpts $1/dev/pts
+sudo mount --bind /dev/shm $1/dev/shm
 sudo mkdir -p $1/$RUN_USER_DIR
 sudo mount --bind $RUN_USER_DIR $1/$RUN_USER_DIR
 
@@ -44,6 +45,7 @@ echo "Unmount filesystems"
 
 [ "$MOUNT_HOME" = "yes" ] && umount $1/home/$ME
 sudo umount --recursive $1/$RUN_USER_DIR
+sudo umount $1/dev/shm
 sudo umount $1/dev/pts
 sudo umount $1/dev
 sudo umount $1/sys
