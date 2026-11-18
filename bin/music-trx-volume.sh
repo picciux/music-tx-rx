@@ -1,8 +1,16 @@
 #! /bin/bash
 
+CF=/etc/default/music-trx
+[ -f "$CF" ] && source "$CF"
+
 case $1 in
     set)
-        alsamixer
+        # Apre il mixer della scheda configurata, non quella di default
+        if [ -n "$AUDIO_DEVICE" ]; then
+            alsamixer -D "$AUDIO_DEVICE"
+        else
+            alsamixer
+        fi
         echo "Run '$0 save' to persist volume level across reboots."
         ;;
 
