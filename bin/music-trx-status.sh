@@ -32,10 +32,18 @@ else
     echo -e "Servizio      : ${RED}FERMO / ERRORE ($SERVICE)${NC}"
 fi
 
-TEMP=$(vcgencmd measure_temp 2>/dev/null | cut -d'=' -f2 || echo "N/D")
+TEMP=$(vcgencmd measure_temp 2>/dev/null | cut -d'=' -f2)
+TEMP=${TEMP:-N/D}
 GOV=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo "N/D")
 OVERLAY=$(mount | grep -q "overlayroot\|lowerdir=" && echo "${GREEN}ATTIVO (Read-Only)${NC}" || echo "${YELLOW}DISATTIVO (Read-Write)${NC}")
-CFG_PART=$(mount | grep "/mnt/config" | grep -q "(ro" && echo "${GREEN}PROTETTA (Read-Only)${NC}" || echo "${RED}SBLOCCATA (Read-Write)${NC}")
+CFG=${CONFIG:-/mnt/config}
+if ! mountpoint -q "$CFG" 2>/dev/null; then
+    CFG_PART="${YELLOW}NON MONTATA ($CFG)${NC}"
+elif findmnt -no OPTIONS "$CFG" | grep -qw ro; then
+    CFG_PART="${GREEN}PROTETTA (Read-Only)${NC}"
+else
+    CFG_PART="${RED}SBLOCCATA (Read-Write)${NC}"
+fi
 
 echo -e "Temperatura   : $TEMP"
 echo -e "CPU Governor  : $GOV"
@@ -59,11 +67,16 @@ else
     echo -e "${RED}Server JACK non in esecuzione!${NC}"
 fi
 
-XRUNS=$(journalctl -u "$SERVICE" -b --no-pager 2>/dev/null | grep -icE "xrun|Process error|delay of")
+JLOG=$(journalctl -u "$SERVICE" -b --no-pager 2>/dev/null)
 echo -e "\n${CYAN}--------------------------------------------------${NC}"
-if [ "$XRUNS" -eq 0 ]; then
-    echo -e "Errori / XRUN : ${GREEN}0 (Flusso perfetto)${NC}"
+if [ -z "$JLOG" ]; then
+    echo -e "Errori / XRUN : ${YELLOW}N/D (journal non leggibile: aggiungi l'utente al gruppo systemd-journal)${NC}"
 else
-    echo -e "Errori / XRUN : ${RED}$XRUNS rilevati dall'avvio${NC}"
+    XRUNS=$(grep -icE "xrun|Process error|delay of" <<< "$JLOG")
+    if [ "$XRUNS" -eq 0 ]; then
+        echo -e "Errori / XRUN : ${GREEN}0 (Flusso perfetto)${NC}"
+    else
+        echo -e "Errori / XRUN : ${RED}$XRUNS rilevati dall'avvio${NC}"
+    fi
 fi
 echo -e "${CYAN}==================================================${NC}"
