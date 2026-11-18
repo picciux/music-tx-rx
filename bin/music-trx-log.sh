@@ -1,3 +1,3 @@
 #! /bin/bash
 
-journalctl -u music-rtx.service -f
+journalctl -u music-trx.service -f

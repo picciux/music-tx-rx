@@ -23,7 +23,7 @@ cat << EOF | less
 
       PARAMETRI:
         set         apre l'utility per impostare i volumi
-        save        salva permanentemete lo stato corrente dei volumi
+        save        salva permanentemente lo stato corrente dei volumi
 
 
 - Mostra stato e statistiche del servizio in tempo reale
