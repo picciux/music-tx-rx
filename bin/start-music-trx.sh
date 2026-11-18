@@ -30,8 +30,16 @@ case "$ROLE" in
         /usr/bin/jackd -R -P 70 -d alsa -d "$AUDIO_DEVICE" -r "$SAMPLE_RATE" -p "$BUFFER_SIZE" -n "$PERIODS" -i 2 -o 0 &
         JACK_PID=$!
 
-        /usr/bin/jack_wait -w -t 10
-        /usr/bin/jack_load netmanager
+        if ! /usr/bin/jack_wait -w -t 10; then
+            echo "ERRORE: il server JACK non e' partito" >&2
+            cleanup
+            exit 1
+        fi
+        if ! /usr/bin/jack_load netmanager; then
+            echo "ERRORE: caricamento di netmanager fallito" >&2
+            cleanup
+            exit 1
+        fi
 
         wait $JACK_PID
         ;;
@@ -41,15 +49,36 @@ case "$ROLE" in
         /usr/bin/jackd -R -P 70 -d net &
         JACK_PID=$!
 
-        /usr/bin/jack_wait -w -t 10
+        # Il server net (slave) e' utilizzabile solo quando compare il master:
+        # attende senza timeout, ma esce se jackd termina.
+        until /usr/bin/jack_wait -c -q >/dev/null 2>&1; do
+            if ! kill -0 "$JACK_PID" 2>/dev/null; then
+                echo "ERRORE: jackd terminato prima di essere pronto" >&2
+                exit 1
+            fi
+            sleep 1
+        done
+
         /usr/bin/alsa_out -d "$AUDIO_DEVICE" -r "$SAMPLE_RATE" -p "$BUFFER_SIZE" -n "$PERIODS" &
         ALSA_PID=$!
+        sleep 1
 
-        sleep 2
-        /usr/bin/jack_connect system:capture_1 alsa_out:playback_1
-        /usr/bin/jack_connect system:capture_2 alsa_out:playback_2
-
-        wait $JACK_PID
+        # Supervisione: ricollega le porte se mancano; se jackd o alsa_out
+        # muoiono esce con errore, cosi' systemd riavvia il servizio.
+        while kill -0 "$JACK_PID" 2>/dev/null; do
+            if ! kill -0 "$ALSA_PID" 2>/dev/null; then
+                echo "ERRORE: alsa_out terminato" >&2
+                cleanup
+                exit 1
+            fi
+            /usr/bin/jack_connect system:capture_1 alsa_out:playback_1 2>/dev/null
+            /usr/bin/jack_connect system:capture_2 alsa_out:playback_2 2>/dev/null
+            sleep 3 &
+            wait $!
+        done
+        echo "ERRORE: jackd terminato (master perso?)" >&2
+        cleanup
+        exit 1
         ;;
 
     *)
