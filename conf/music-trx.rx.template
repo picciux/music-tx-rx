@@ -10,7 +10,9 @@ ROLE=rx
 # audio_pwm_mode=2 in config.txt per eliminare il fruscio dall'uscita mini-jack.
 AUDIO_DEVICE="hw:Headphones"
 
-# Deve corrispondere al Sample Rate del trasmettitore
+# Frequenza di campionamento del device locale. Il rate di JACK e' imposto dal
+# trasmettitore (master); se differisce da questo, alsa_out ricampiona
+# (con un po' di latenza e carico CPU in piu'): meglio tenerli uguali.
 SAMPLE_RATE=48000
 
 # Buffer per l'uscita locale (sul jack integrato 256 è consigliato per evitare click)
