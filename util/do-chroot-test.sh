@@ -10,6 +10,7 @@ MOUNT_PULSE=
 CMD=
 
 ME=$USER
+MYDIR="$( cd "$( dirname "$0" )" && pwd )"
 
 if [ "$2" = "-h" ]; then
 	MOUNT_HOME=yes
@@ -33,7 +34,7 @@ sudo mount --bind /dev/shm $1/dev/shm
 sudo mkdir -p $1/$RUN_USER_DIR
 sudo mount --bind $RUN_USER_DIR $1/$RUN_USER_DIR
 
-[ "$MOUNT_HOME" = "yes" ] && mount --bind /home/$ME $1/home/$ME
+[ "$MOUNT_HOME" = "yes" ] && sudo mount --bind /home/$ME $1/home/$ME
 
 echo "- Prepare system"
 sudo cp /etc/resolv.conf $1/etc/
@@ -43,7 +44,7 @@ debian_chroot="$1" sudo -E chroot $1 su --login -w debian_chroot,DISPLAY,Xauthor
 
 echo "Unmount filesystems"
 
-[ "$MOUNT_HOME" = "yes" ] && umount $1/home/$ME
+[ "$MOUNT_HOME" = "yes" ] && sudo umount $1/home/$ME
 sudo umount --recursive $1/$RUN_USER_DIR
 sudo umount $1/dev/shm
 sudo umount $1/dev/pts
