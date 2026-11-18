@@ -3,7 +3,7 @@
 CF=/etc/default/music-trx
 
 if [ ! -f "$CF" ]; then
-    echo "ERROR: no audio config file found."
+    echo "ERRORE: file di configurazione audio non trovato."
     exit 1
 fi
 

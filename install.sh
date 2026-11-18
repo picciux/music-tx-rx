@@ -7,13 +7,13 @@ CONFIG=/mnt/config
 ASTATE=/var/lib/alsa/asound.state
 
 # verifica l'argomento
-[ "$1" = "tx" ] || [ "$1" = "rx" ] || { echo; echo "USAGE: $0 tx|rx [config_path]"; echo; exit 1; }
+[ "$1" = "tx" ] || [ "$1" = "rx" ] || { echo; echo "USO: $0 tx|rx [percorso_config]"; echo; exit 1; }
 
 if [ "$2" ]; then CONFIG="$2"; fi
 
-# Utente che eseguira' il servizio (anche se lanciato con sudo)
+# Utente che eseguirà il servizio (anche se lanciato con sudo)
 RUN_USER=${SUDO_USER:-$USER}
-id -nG "$RUN_USER" | grep -qw audio || echo "ATTENZIONE: $RUN_USER non e' nel gruppo audio (sudo usermod -aG audio $RUN_USER)"
+id -nG "$RUN_USER" | grep -qw audio || echo "ATTENZIONE: $RUN_USER non è nel gruppo audio (sudo usermod -aG audio $RUN_USER)"
 
 # Installa i pacchetti necessari
 echo "- Installo i pacchetti necessari..."

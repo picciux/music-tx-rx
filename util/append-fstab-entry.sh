@@ -2,14 +2,14 @@
 
 set -e
 
-[ $# -lt 2 ] && { echo "USAGE: $0 partition_device mount_point"; exit 1; }
+[ $# -lt 2 ] && { echo "USO: $0 device_partizione punto_di_mount"; exit 1; }
 
 DEV=$1
 MP=$2
 
 UUID=$( sudo blkid $DEV | grep -oP 'UUID="\K[^"]+' )
-echo "Appending to /etc/fstab... "
+echo "Aggiungo a /etc/fstab... "
 echo "UUID=$UUID  $MP  ext4  defaults,ro,noatime,nofail  0  2" | sudo tee -a /etc/fstab
-echo "done."
+echo "fatto."
 echo
 

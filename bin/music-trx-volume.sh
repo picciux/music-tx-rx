@@ -11,16 +11,16 @@ case $1 in
         else
             alsamixer
         fi
-        echo "Run '$0 save' to persist volume level across reboots."
+        echo "Esegui '$0 save' per mantenere il volume anche dopo il riavvio."
         ;;
 
     save)
-        sudo alsactl store && echo "Volume saved!"
+        sudo alsactl store && echo "Volume salvato!"
         ;;
 
     *)
         echo
-        echo "USAGE: $0 set|save"
+        echo "USO: $0 set|save"
         echo
         exit 1
         ;;

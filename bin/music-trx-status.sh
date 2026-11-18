@@ -21,7 +21,7 @@ case "$ROLE" in
 esac
 
 echo -e "${CYAN}==================================================${NC}"
-echo -e "${CYAN}           MUSIC-TRX AUDIO STATUS                 ${NC}"
+echo -e "${CYAN}           MUSIC-TRX - STATO AUDIO                  ${NC}"
 echo -e "${CYAN}==================================================${NC}"
 echo -e "Ruolo Nodo    : ${YELLOW}$ROLE_LABEL${NC}"
 echo -e "Device ALSA   : $AUDIO_DEVICE"

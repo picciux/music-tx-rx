@@ -1,7 +1,7 @@
 #! /bin/bash
 
 if [ "$1" = "" ]; then
-	echo "Missing target"
+	echo "ERRORE: manca la directory di destinazione"
 	exit 1
 fi
 
@@ -16,7 +16,7 @@ if [ "$2" = "-h" ]; then
 	MOUNT_HOME=yes
 	#MOUNT_PULSE=yes
 elif [ "$2" ]; then
-	# Use username specified on cmdline
+	# Usa il nome utente indicato da riga di comando
 	ME=$2
 fi
 
@@ -24,8 +24,8 @@ fi
 
 RUN_USER_DIR="/run/user/$( id -u )"
 
-# Mount special filesystems
-echo "- Mount filesystems..."
+# Monta i filesystem speciali
+echo "- Monto i filesystem..."
 sudo mount -t proc proc $1/proc
 sudo mount -t sysfs sys $1/sys
 sudo mount --bind /dev $1/dev
@@ -36,13 +36,13 @@ sudo mount --bind $RUN_USER_DIR $1/$RUN_USER_DIR
 
 [ "$MOUNT_HOME" = "yes" ] && sudo mount --bind /home/$ME $1/home/$ME
 
-echo "- Prepare system"
+echo "- Preparo il sistema"
 sudo cp /etc/resolv.conf $1/etc/
 
-echo "- Enter test environment (type 'exit' to leave)."
+echo "- Entro nell'ambiente di test (digita 'exit' per uscire)."
 debian_chroot="$1" sudo -E chroot $1 su --login -w debian_chroot,DISPLAY,Xauthority,XAUTHORITY,DBUS_SESSION_BUS_ADDRESS $CMD $ME
 
-echo "Unmount filesystems"
+echo "Smonto i filesystem"
 
 [ "$MOUNT_HOME" = "yes" ] && sudo umount $1/home/$ME
 sudo umount --recursive $1/$RUN_USER_DIR
@@ -54,12 +54,12 @@ sudo umount $1/proc
 
 cat << EOF
 
-Exited from test environment.
+Uscito dall'ambiente di test.
 
-Don't forget to remove the test and clear the environment, typing:
+Non dimenticare di rimuovere il test e ripulire l'ambiente, digitando:
 
     $ $MYDIR/remove-chroot-test.sh $1
 
-if you don't need it anymore.
+quando non ti serve più.
 
 EOF

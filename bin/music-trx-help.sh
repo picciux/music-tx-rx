@@ -3,7 +3,7 @@
 cat << EOF | less
 
 =====================================================================
-  MUSIC TRX HELP
+  MUSIC TRX - AIUTO
 =====================================================================
 
 - Abilita o disabilita la modifica delle configurazioni:
